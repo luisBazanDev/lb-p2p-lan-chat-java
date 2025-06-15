@@ -13,7 +13,7 @@ public class Main {
         SetupDialog.setup();
 
         // Start client
-        ClientService clientService = new ClientService();
+        ClientService clientService = ClientService.getInstance();
         clientService.start();
 
         ChatDialog.start();

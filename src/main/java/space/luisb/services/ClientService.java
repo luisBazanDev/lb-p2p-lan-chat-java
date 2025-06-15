@@ -13,6 +13,21 @@ public class ClientService {
     private Socket socket;
     private InputStream in;
     private PrintStream out;
+    private static ClientService instance;
+
+    public static ClientService getInstance() {
+        if (instance == null) {
+            instance = new ClientService();
+        }
+        return instance;
+    }
+
+    public void sendMessage(ChatMessage chatMessage) {
+        if(chatMessage.getTTL() == Config.getMaxTTL())
+            chatMessage = new ChatMessage(Config.getUsername(), chatMessage.getMessage(), chatMessage.getTTL() - 1, chatMessage.getUUID());
+
+        out.print(chatMessage);
+    }
 
     public void start() {
         try {
