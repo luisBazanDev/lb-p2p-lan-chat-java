@@ -29,4 +29,8 @@ public class Message {
     public String toString() {
         return toJson().toString();
     }
+
+    public String format() {
+        return toString();
+    }
 }

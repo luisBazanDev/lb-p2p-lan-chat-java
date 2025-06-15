@@ -2,7 +2,6 @@ package space.luisb.services;
 
 import com.google.gson.Gson;
 import space.luisb.Config;
-import space.luisb.MessageType;
 import space.luisb.messages.ChatMessage;
 import space.luisb.messages.HelloMessage;
 import space.luisb.messages.Message;
@@ -17,6 +16,7 @@ public class ClientService {
 
     public void start() {
         try {
+            System.out.println("Connecting to server...");
             socket = new Socket(Config.getHost(), Config.getPort());
             in = socket.getInputStream();
             out = new PrintStream(socket.getOutputStream());
@@ -25,32 +25,44 @@ public class ClientService {
             out.print(new HelloMessage(Config.getUsername()));
             out.flush();
 
-            byte[] data = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(data)) != -1) {
-                buffer.write(data, 0, bytesRead);
-                String response = buffer.toString("UTF-8");
-
+            new Thread(() -> {
+                byte[] data = new byte[1024];
+                int bytesRead;
                 try {
-                    Message message = new Gson().fromJson(response, Message.class);
-                    if(message.getMessageType().equals(MessageType.HELLO)) {
-                        HelloMessage helloMessage = new Gson().fromJson(response, HelloMessage.class);
-                        System.out.println(helloMessage.getUsername() + " join to the chat");
-                    }
-                    if(message.getMessageType().equals(MessageType.MESSAGE)) {
-                        ChatMessage chatMessage = new Gson().fromJson(response, ChatMessage.class);
-                        System.out.println("(" + chatMessage.getTTL() + " ttl) " + chatMessage.getUsername() + ": " + chatMessage.getMessage());
-                    }
+                    while ((bytesRead = in.read(data)) != -1) {
+                        buffer.write(data, 0, bytesRead);
+                        String rawMessage = buffer.toString("UTF-8");
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        try {
+                            // Try parse json
+                            Message message = new Gson().fromJson(rawMessage, Message.class);
+                            switch (message.getMessageType()) {
+                                case HELLO:
+                                    ChatService.addMessage(new Gson().fromJson(rawMessage, HelloMessage.class));
+                                    break;
+                                case MESSAGE:
+                                    ChatService.addMessage(new Gson().fromJson(rawMessage, ChatMessage.class));
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        buffer.reset();
+                    }
+                } catch (IOException e) {
+
                 }
-
-                out.print(new ChatMessage(Config.getUsername(), "Hi!", 4));
-                buffer.reset();
-            }
+            }).start();
+            System.out.println("Connected!");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        try {
+            this.socket.close();
+        } catch (IOException e) {}
     }
 }

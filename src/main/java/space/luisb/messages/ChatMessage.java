@@ -58,15 +58,8 @@ public class ChatMessage extends Message {
         return payload.uuid;
     }
 
-    public static ChatMessage fromJson(JsonObject jsonObject) {
-        try {
-            String username = jsonObject.get("payload.username").getAsString();
-            String message = jsonObject.get("payload.message").getAsString();
-            int ttl = jsonObject.get("payload.ttl").getAsInt();
-            String uuid = jsonObject.get("payload.uuid").getAsString();
-            return new ChatMessage(username, message, ttl, uuid);
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    public String format() {
+        return String.format("(%d ttl) %s: %s", payload.ttl, payload.username, payload.message);
     }
 }

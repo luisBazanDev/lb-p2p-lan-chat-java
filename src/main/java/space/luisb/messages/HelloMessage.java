@@ -25,12 +25,8 @@ public class HelloMessage extends Message {
         return payload.username;
     }
 
-    public static HelloMessage fromJson(JsonObject jsonObject) {
-        try {
-            String username = jsonObject.get("payload.username").getAsString();
-            return new HelloMessage(username);
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    public String format() {
+        return String.format("\uD83D\uDC4B %s join to the chat!", payload.username);
     }
 }
