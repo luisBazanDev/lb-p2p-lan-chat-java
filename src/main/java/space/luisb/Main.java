@@ -13,10 +13,6 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         SetupDialog.setup();
 
-        // Start client
-        ClientService clientService = ClientService.getInstance();
-        clientService.start();
-
         // Start server
         ServerService serverService = ServerService.getInstance();
         serverService.start();

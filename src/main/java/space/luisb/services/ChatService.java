@@ -24,9 +24,10 @@ public class ChatService {
             if(getInstance().uuidFilter.contains(((ChatMessage) message).getUUID()))
                 return;
             getInstance().uuidFilter.add(((ChatMessage) message).getUUID());
+            ServerService.getInstance().broadcastMessage((ChatMessage) message);
+            ClientService.broadcastMessage((ChatMessage) message);
         }
 
-        ServerService.getInstance().broadcastMessage(message);
         getInstance().messages.add(message);
         System.out.println(message.format());
     }

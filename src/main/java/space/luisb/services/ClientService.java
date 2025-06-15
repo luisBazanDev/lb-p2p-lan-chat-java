@@ -8,31 +8,38 @@ import space.luisb.messages.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientService {
     private Socket socket;
     private InputStream in;
     private PrintStream out;
-    private static ClientService instance;
+    private String host;
+    private int port;
+    private static List<ClientService> connections = new ArrayList<>();
 
-    public static ClientService getInstance() {
-        if (instance == null) {
-            instance = new ClientService();
-        }
-        return instance;
+    public ClientService(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    public static void broadcastMessage(ChatMessage chatMessage) {
+        ChatMessage finalMessage =  new ChatMessage(chatMessage.getUsername(), chatMessage.getMessage(), chatMessage.getTTL() - 1, chatMessage.getUUID());
+
+        connections.forEach(clientService -> {
+            clientService.sendMessage(finalMessage);
+        });
     }
 
     public void sendMessage(ChatMessage chatMessage) {
-        if(chatMessage.getTTL() == Config.getMaxTTL())
-            chatMessage = new ChatMessage(Config.getUsername(), chatMessage.getMessage(), chatMessage.getTTL() - 1, chatMessage.getUUID());
-
         out.print(chatMessage);
     }
 
     public void start() {
         try {
             System.out.println("Connecting to server...");
-            socket = new Socket(Config.getHost(), Config.getPort());
+            socket = new Socket(host, port);
             in = socket.getInputStream();
             out = new PrintStream(socket.getOutputStream());
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -69,7 +76,7 @@ public class ClientService {
 
                 }
             }).start();
-            System.out.println("Connected!");
+            connections.add(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,6 +84,7 @@ public class ClientService {
 
     public void stop() {
         try {
+            connections.remove(this);
             this.socket.close();
         } catch (IOException e) {}
     }

@@ -13,24 +13,25 @@ public class SetupDialog {
         String name = scanner.nextLine();
         Config.setUsername(name);
 
-        // Host
-        String host = "";
-        while (!validHost(host)) {
-            System.out.println("Please enter the host ip");
-            host = scanner.nextLine();
-        }
-        Config.setHost(host);
-
-        // Port
-        System.out.println("Please enter your port: ");
-        int port = scanner.nextInt();
-        while(port < 0 || port > 65535) {
-            System.out.println("Please enter a valid port");
-            port = scanner.nextInt();
-        }
-        Config.setPort(port);
-
-        System.out.println("Setup complete " + name);
+//        // Now disable
+//        // Host
+//        String host = "";
+//        while (!validHost(host)) {
+//            System.out.println("Please enter the host ip");
+//            host = scanner.nextLine();
+//        }
+//        Config.setHost(host);
+//
+//        // Port
+//        System.out.println("Please enter your port: ");
+//        int port = scanner.nextInt();
+//        while(port < 0 || port > 65535) {
+//            System.out.println("Please enter a valid port");
+//            port = scanner.nextInt();
+//        }
+//        Config.setPort(port);
+//
+//        System.out.println("Setup complete " + name);
     }
 
     private static boolean validHost(String host) {
