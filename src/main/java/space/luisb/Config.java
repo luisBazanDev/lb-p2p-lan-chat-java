@@ -4,6 +4,7 @@ public class Config {
     private String host;
     private int port;
     private String username;
+    private final int MAX_TTL = 5;
     private static Config instance;
 
     public static Config getInstance() {
@@ -23,6 +24,10 @@ public class Config {
 
     public static String getUsername() {
         return getInstance().username;
+    }
+
+    public static int getMaxTTL() {
+        return getInstance().MAX_TTL;
     }
 
     public static void setHost(String host) {
