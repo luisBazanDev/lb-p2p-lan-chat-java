@@ -15,8 +15,6 @@ public class SetupDialog {
 
         // Host
         String host = "";
-        // TODO: remove this
-        host = "127.0.0.1";
         while (!validHost(host)) {
             System.out.println("Please enter the host ip");
             host = scanner.nextLine();
@@ -26,8 +24,6 @@ public class SetupDialog {
         // Port
         System.out.println("Please enter your port: ");
         int port = scanner.nextInt();
-        // TODO: remove this
-        port = 1288;
         while(port < 0 || port > 65535) {
             System.out.println("Please enter a valid port");
             port = scanner.nextInt();

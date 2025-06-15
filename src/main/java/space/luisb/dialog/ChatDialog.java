@@ -4,6 +4,7 @@ import space.luisb.Config;
 import space.luisb.messages.ChatMessage;
 import space.luisb.services.ChatService;
 import space.luisb.services.ClientService;
+import space.luisb.services.ServerService;
 
 import java.util.Scanner;
 
@@ -22,6 +23,7 @@ public class ChatDialog {
             ChatMessage chatMessage = new ChatMessage(Config.getUsername(), input);
             ChatService.addMessage(chatMessage);
             ClientService.getInstance().sendMessage(chatMessage);
+            ServerService.getInstance().broadcastMessage(chatMessage);
         }
     }
 }

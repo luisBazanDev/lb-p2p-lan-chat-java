@@ -1,5 +1,6 @@
 package space.luisb.services;
 
+import com.google.gson.Gson;
 import space.luisb.messages.ChatMessage;
 import space.luisb.messages.Message;
 
@@ -25,6 +26,7 @@ public class ChatService {
             getInstance().uuidFilter.add(((ChatMessage) message).getUUID());
         }
 
+        ServerService.getInstance().broadcastMessage(message);
         getInstance().messages.add(message);
         System.out.println(message.format());
     }
