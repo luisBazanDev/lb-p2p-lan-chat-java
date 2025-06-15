@@ -1,8 +1,8 @@
-package space.luisb;
+package space.luisb.services;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import space.luisb.Config;
+import space.luisb.MessageType;
 import space.luisb.messages.ChatMessage;
 import space.luisb.messages.HelloMessage;
 import space.luisb.messages.Message;
@@ -10,7 +10,7 @@ import space.luisb.messages.Message;
 import java.io.*;
 import java.net.Socket;
 
-public class Client {
+public class ClientService {
     private Socket socket;
     private InputStream in;
     private PrintStream out;
